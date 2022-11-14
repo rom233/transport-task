@@ -120,6 +120,9 @@ namespace Transport_task
             _tbHeight = tb00.Height;
             _tbTop = tb00.Top;
             _tbLeft = tb00.Left;
+
+            res0.Left = _tbLeft + _tbWidth;
+            req0.Top = _tbTop + _tbHeight;
         }
 
         private void TableX_Load(object sender, EventArgs e)

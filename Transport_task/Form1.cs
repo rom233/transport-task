@@ -172,6 +172,7 @@ namespace Transport_task
 
             Console.WriteLine();
 
+            Optimization(matrix_2, pos_i, pos_k);
 
 
             // Вывод результата
@@ -188,6 +189,107 @@ namespace Transport_task
                         tableX2.GetReq(k).Text = req[k].ToString();
                 }
                 tableX2.GetRes(i).Text = res[i].ToString();
+            }
+
+
+        }
+
+        private void Optimization(int[,] matrix_2, int pos_i, int pos_k)
+        {
+            int[,] ex = new int[m, n]; // Таблица с исключениями
+                                       // 0 - не проверялась
+                                       // 1 - проверено
+
+            // Допустимо 3 сгиба
+
+            // По X вперед
+            //for (int k = pos_k; k < n; k++)
+            //{
+            //    if (matrix_2[pos_i, k] != 0)
+            //    {
+            //        Console.WriteLine($"Check(1, {pos_i}, {k})");
+            //        Check(1, pos_i, k, matrix_2, ex);
+            //    }
+            //}
+
+            // По X назад
+
+            // По Y вверх
+
+            // По Y вниз
+
+            ex[pos_i, pos_k] = 2;
+            Check(pos_i, pos_k, matrix_2, ex);
+        }
+
+        private void Check(int center_i, int center_k, int[,] matrix_2, int[,] ex)
+        {
+            for (int i = 0; i < m; i++)
+                if (ex[i, center_k] == 2)
+                {
+                    Console.WriteLine($"От {center_i} {center_k} можно провести до центра");
+                }
+
+            for (int k = 0; k < n; k++)
+                if (ex[center_i, k] == 2)
+                {
+                    Console.WriteLine($"От {center_i} {center_k} можно провести до центра");
+                }
+
+            // По X вперед
+            if (center_k + 1 < n && ex[center_i, center_k + 1] == 0)
+            {
+                for (int k = center_k + 1; k < n; k++)
+                {
+                    if (matrix_2[center_i, k] != 0) // Точка имеет стоимость
+                    {
+                        Console.WriteLine($"По x вперед: Check({center_i}, {k}, matrix_2, ex); Центр {center_i} {center_k}");
+                        ex[center_i, k] = 1;
+                        Check(center_i, k, matrix_2, ex);
+                    }
+                }
+            }
+
+            // По X назад
+            if (center_k - 1 >= 0 && ex[center_i, center_k - 1] == 0)
+            {
+                for (int k = center_k - 1; k >= 0; k--)
+                {
+                    if (matrix_2[center_i, k] != 0) // Точка имеет стоимость
+                    {
+                        Console.WriteLine($"По x назад: Check({center_i}, {k}, matrix_2, ex); Центр {center_i} {center_k}");
+                        ex[center_i, k] = 1;
+                        Check(center_i, k, matrix_2, ex);
+                    }
+                }
+            }
+
+            // По Y вниз
+            if (center_i + 1 < m && ex[center_i + 1, center_k] == 0)
+            {
+                for (int i = center_i + 1; i < m; i++)
+                {
+                    if (matrix_2[i, center_k] != 0) // Точка имеет стоимость
+                    {
+                        Console.WriteLine($"По y вниз: Check({i}, {center_k}, matrix_2, ex); Центр {center_i} {center_k}");
+                        ex[i, center_k] = 1;
+                        Check(i, center_k, matrix_2, ex);
+                    }
+                }
+            }
+
+            // По Y вверх
+            if (center_i - 1 >= 0 && ex[center_i - 1, center_k] == 0)
+            {
+                for (int i = center_i - 1; i >= 0; i--)
+                {
+                    if (matrix_2[i, center_k] != 0) // Точка имеет стоимость
+                    {
+                        Console.WriteLine($"По y вверх: Check({i}, {center_k}, matrix_2, ex); Центр {center_i} {center_k}");
+                        ex[i, center_k] = 1;
+                        Check(i, center_k, matrix_2, ex);
+                    }
+                }
             }
 
 
